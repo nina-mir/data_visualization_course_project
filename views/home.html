@@ -1,0 +1,109 @@
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+</head>
+
+<body style="font-family:'PT Sans', sans-serif;">
+  <div class="container">
+    <div class="row">
+      <div id="about" class="col-sm-9 col-md-8 col-lg-8">
+        <h2> What is this project about? </h2>
+        <h6> >>Please use Google Chrome browser for the experience using this web app!<< </h6>
+
+        <h5> 
+          <strong> 
+            Nina Mir | CS graduate student | San Francisco State University | May 2020 <i class="fa fa-github" style="font-size:28px"></i>
+
+          </strong>
+        </h5>
+        
+        <p>
+          In short, using the San Francisco <q cite="https://support.datasf.org/help/police-department-incident-reports-2018-to-present-overview">Police Department Incident Reports: 2018 to Present</q> dataset available 
+            <a style="color: blue;" href="https://data.sfgov.org/Public-Safety/Police-Department-Incident-Reports-2018-to-Present/wg3w-h783">here</a>,
+            I created a web app for an interactive data visualization system, consisted of two views: <i class="fa fa-bar-chart" style="font-size:24px"></i>
+            & <i class="material-icons" style="font-size:24px">place</i>
+             views,  
+            to offer a more clear picture of the nature, numbers and geo-location of all the incident calls dated 2019.  
+        </p>
+        <h3> System Architecture </h3>
+
+        <ul style="font-size: 16px;">
+          <li> <strong>Operating System:</strong> Linux Ubuntu 16.04</li>
+          <li> <strong>Server Environment:</strong> Node.js (version: 8.17.0)</li>
+          <li><strong> Application Framework:</strong> Express.js (version: 4.17.1)</li>
+          <li><strong>Frontend:</strong> jQuery, JavaScript, Bootstrap, CSS, HTML</li>
+          <li><strong>Data Visualization Libraries:</strong> Google Chart API, D3 library (d3.v4.min.js)</li>
+          <li><strong>Data Cleaning:</strong> Python Pandas
+          </li>
+
+        </ul>
+
+        <h3> Dataset Description </h3>
+
+        <p>
+          The original dataset (~ 120 MB) can be downloaded in a CSV format containing 344,000 rows and 26 columns. 
+          Each row contains numerous temporal, categorical, and geographical information pertaining to one incident call: 
+          <i>incident datetime, day of the week, incident category, incident resolution, neighborhood,
+          police district, supervisor district, latitude, longitude, nearest street intersection, etc.</i>   
+        </p>
+        <p>
+          Using Python Pandas library, the original dataset was analysed and cleaned. After extracting 2019 incident call rows, and further reducing the dimensions of this dataset -- selecting the following 
+          14 columns:
+        </p>
+        <pre style="width: 50%;">
+            'Incident Date',
+            'Incident Day of Week',
+            'Incident Category',
+            'Incident Subcategory',
+            'Incident Description',
+            'Resolution',
+            'Police District', 
+            'Analysis Neighborhood', 
+            'Latitude',
+            'Longitude',
+            'SF Find Neighborhoods',
+            'Supervisor District',
+            'Current Police Districts',
+            'Current Supervisor Districts'
+          </pre>
+        <p>
+        The extracted CSV file was further cleaned to create relevant JSON files for data visualization goals. 
+        An example JSON, showing the total number of incident calls per month, is as follows:
+        </p>
+        <pre style="width: 50%;">
+          {
+            "January": 12117,
+            "February": 10961,
+            "March": 11777,
+            "April": 11785,
+            "May": 12284,
+            "June": 12093,
+            "July": 13087,
+            "August": 13702,
+            "September": 12838,
+            "October": 13594,
+            "November": 12112,
+            "December": 12141
+          } 
+        </pre>
+        <p>
+          
+        </p>
+
+
+      </div>
+    </div>
+  </div>
+  
+  
+    
+
+
+</body>
+
+
+
+</html>

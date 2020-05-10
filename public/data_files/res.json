@@ -1,0 +1,80 @@
+{
+    "March": {
+      "Unfounded": 93,
+      "Cite or Arrest Adult": 2655,
+      "Open or Active": 8968,
+      "Exceptional Adult": 61
+    },
+    "November": {
+      "Unfounded": 50,
+      "Cite or Arrest Adult": 2618,
+      "Open or Active": 9423,
+      "Exceptional Adult": 21
+    },
+    "February": {
+      "Unfounded": 66,
+      "Cite or Arrest Adult": 2634,
+      "Open or Active": 8200,
+      "Exceptional Adult": 61
+    },
+    "October": {
+      "Unfounded": 70,
+      "Cite or Arrest Adult": 2758,
+      "Open or Active": 10719,
+      "Exceptional Adult": 47
+    },
+    "April": {
+      "Unfounded": 69,
+      "Cite or Arrest Adult": 2800,
+      "Open or Active": 8877,
+      "Exceptional Adult": 39
+    },
+    "December": {
+      "Unfounded": 56,
+      "Cite or Arrest Adult": 2293,
+      "Open or Active": 9768,
+      "Exceptional Adult": 24
+    },
+    "June": {
+      "Unfounded": 81,
+      "Cite or Arrest Adult": 2555,
+      "Open or Active": 9429,
+      "Exceptional Adult": 28
+    },
+    "May": {
+      "Unfounded": 80,
+      "Cite or Arrest Adult": 2927,
+      "Open or Active": 9240,
+      "Exceptional Adult": 37
+    },
+    "Global": {
+      "Unfounded": 891,
+      "Cite or Arrest Adult": 32623,
+      "Open or Active": 114528,
+      "Exceptional Adult": 449
+    },
+    "January": {
+      "Unfounded": 103,
+      "Cite or Arrest Adult": 2909,
+      "Open or Active": 9067,
+      "Exceptional Adult": 38
+    },
+    "September": {
+      "Unfounded": 63,
+      "Cite or Arrest Adult": 2619,
+      "Open or Active": 10133,
+      "Exceptional Adult": 23
+    },
+    "August": {
+      "Unfounded": 60,
+      "Cite or Arrest Adult": 2945,
+      "Open or Active": 10659,
+      "Exceptional Adult": 38
+    },
+    "July": {
+      "Unfounded": 100,
+      "Cite or Arrest Adult": 2910,
+      "Open or Active": 10045,
+      "Exceptional Adult": 32
+    }
+  }

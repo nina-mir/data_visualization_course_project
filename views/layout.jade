@@ -1,0 +1,23 @@
+doctype html
+html
+  head
+    title= title
+      //- <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet">
+    link(rel='stylesheet', href='https://fonts.googleapis.com/css2?family=PT+Sans&display=swap')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css')
+    //- 
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+      nav(class='navbar navbar-fixed-top')
+        a(class='navbar-brand' href='/') Data Visualization Course Project  
+        div(class='collapse navbar-collapse' id='navbar')
+          ul(class='nav navbar-nav')
+            //- li(class='#{selected === "home" ? "active" : ""}')
+            //-   a(href='/') Home
+            li(class='#{selected === "bar_charts" ? "active" : ""}')
+              a(href='/bar_charts') Graph Views
+            li(class='#{selected === "geospatial" ? "active" : ""}')
+              a(href='/geospatial') Map View
+
+    div(class='container' id='content')
+      block content

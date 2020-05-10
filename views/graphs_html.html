@@ -1,0 +1,272 @@
+<html>
+<head>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  <!-- Load d3.js -->
+  <script src="https://d3js.org/d3.v4.js"></script>
+  <!--script type="text/javascript" src="/data_files/monthly_total_calls.js"></script-->
+  <script type="text/javascript" src="/data_files/all_months_crim_cat_nums.js"></script>
+  <script type="text/javascript" src="/javascripts/part_i.js"></script>
+  <script type="text/javascript" src="/javascripts/resolutions.js"></script>
+  <!-- Load d3-cloud -->
+  <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
+  
+</head>
+
+<body style="font-family:'PT Sans', sans-serif;">
+
+  <div class="row">
+        <div id="year_chart" class="column11 viz_chart"></div>
+        <form id="robby">
+          <input type="button" onclick="loadjscssfile('/javascripts/part_i.js', 'js')" value="reset" />
+        </form>
+    <div id="part_i_violent" class="column21 viz_chart" ></div>
+    <div id="part_i_property" class="column21 viz_chart" ></div>
+    <div id="word_cloud" class="column31 viz_chart" > 
+      <p style="font: size 14; padding:1em;">Word Cloud based on the Frequentcy <br> of the Incident Categories [d3 library]
+      </p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="column21 viz_chart" >
+      <input type="button" class="btn btn-secondary" onclick="loadjscssfile('/javascripts/resolutions.js', 'js')" value="Resolution Table Reset" />
+      <p id="table_title" style="font-size: 16px; padding:1em;"></p>
+      <p id="more_info" style="font-size: 16px; padding:1em;"></p>
+      <div id="table_div" class="viz_chart" ></div>
+    </div>
+    <div id="top_cities_chart" class="column22 viz_chart" ></div>
+  </div>
+  <script type="text/javascript" src="/javascripts/hoods.js"></script>
+  
+
+  <div id="chart_div_2" class="viz_chart" style="float:left;"></div> 
+    
+<script>
+
+
+var topping = 'Global';
+
+function loadjscssfile(filename, filetype){
+  if (filetype=="js"){ //if filename is a external JavaScript file
+      var fileref=document.createElement('script')
+      fileref.setAttribute("type","text/javascript")
+      fileref.setAttribute("src", filename)
+  }
+  else if (filetype=="css"){ //if filename is an external CSS file
+      var fileref=document.createElement("link")
+      fileref.setAttribute("rel", "stylesheet")
+      fileref.setAttribute("type", "text/css")
+      fileref.setAttribute("href", filename)
+  }
+  if (typeof fileref!="undefined")
+      document.getElementsByTagName("head")[0].appendChild(fileref)
+}
+
+
+
+var monatNamen = [ "January", "February", "March", 
+    "April", "May", "June", "July", "August", "September", 
+    "October", "November", "December" ];
+
+
+  google.charts.load('current', {packages: ['corechart']});
+  google.charts.setOnLoadCallback(drawAxisTickColors);
+  
+
+  console.log(all_months_categories);
+  function drawAxisTickColors() {
+
+    function cb(err, res, body){
+      var data = JSON.parse(body.responseText);
+      var col_heads = ['Month', 'Incident Calls', { role: 'style' }];
+      var x = google_array_maker(data,Object.keys(data), col_heads, "#5f5c55" );
+      var data = google.visualization.arrayToDataTable(x);
+      var chart = new google.visualization.ColumnChart(document.getElementById('year_chart'));
+      
+      function selectHandler() {
+        var selectedItem = chart.getSelection()[0];
+        if (selectedItem) {
+          topping = data.getValue(selectedItem.row, 0);
+          let index = monatNamen.indexOf(topping);
+
+          //alert('The user selected ' + topping + String(index + 1));
+
+          daraw_chart_monthly_cats(topping, index);
+          part_i_monthly(topping, index, 1);
+          part_i_monthly(topping, index, 0);
+          table_rez(topping, index);
+
+          $.get('/api/ninatest', topping, function(response) {
+            console.log(response);       
+          });
+        }
+      }
+      google.visualization.events.addListener(chart, 'select', selectHandler);  
+      chart.draw(data, options);
+    };
+
+    function foo(cb){
+      $.get('/api/monthly_total_calls', {json: true}, cb);
+    }
+
+    foo(cb)    
+
+    var options = {
+      legend: { position: "none" },
+      chartArea:{top:60, width:"85%"},
+      bar: { groupWidth: '30%' },
+      title: 'Monthly Incident Calls to SFPD in 2019',
+      titleTextStyle: {
+          fontSize: 16,
+          bold: false,
+          color: 'black'
+        },
+      vAxis: {
+        format:'short',
+        minValue: 10500,
+        textStyle: {
+          bold: true,
+          fontSize: 10,
+          color: '#4d4d4d'
+        },
+        titleTextStyle: {
+          bold: true,
+          fontSize: 14,
+          color: '#4d4d4d'
+        }
+      },
+      hAxis: {
+        textStyle: {
+          fontSize: 12,
+          bold: false,
+          color: 'black'
+        },
+        titleTextStyle: {
+          fontSize: 12,
+          bold: true,
+          color: 'gray'
+        }
+      }
+    };
+    
+
+   
+  }
+
+    
+
+
+
+
+
+      
+
+  // List of words
+  var myWords = [{word:"Suicide", size: "10"},
+  {word:"Malicious Mischief", size: "15"},
+  {word:"Miscellaneous Investigation", size: "10"},
+  {word:"Arson", size: "10"},
+  {word:"Rape", size: "10"},
+  {word:"Sex Offense", size: "10"},
+  {word:"Motor Vehicle Theft", size: "15"},
+  {word:"Weapons Carrying Etc", size: "10"},
+  {word:"Stolen Property", size: "10"},
+  {word:"Gambling", size: "10"},
+  {word:"Non-Criminal", size: "15"},
+  {word:"Suspicious", size: "10"},
+  {word:"Vehicle Misplaced", size: "10"},
+  {word:"Traffic Violation Arrest", size: "10"},
+  {word:"Other Miscellaneous", size: "15"},
+  {word:"Drug Offense", size: "10"},
+  {word:"Robbery", size: "10"},
+  {word:"Vandalism", size: "10"},
+  {word:"Liquor Laws", size: "10"},
+  {word:"Embezzlement", size: "10"},
+  {word:"Case Closure", size: "10"},
+  {word:"Suspicious Occ", size: "10"},
+  {word:"Weapons Offence", size: "10"},
+  {word:"Recovered Vehicle", size: "10"},
+  {word:"Human Trafficking (A), Commercial Sex Acts", size: "10"},
+  {word:"Fraud", size: "10"},
+  {word:"Larceny Theft", size: "49"},
+  {word:"Lost Property", size: "15"},
+  {word:"Courtesy Report", size: "10"},
+  {word:"Traffic Collision", size: "10"},
+  {word:"Vehicle Impounded", size: "10"},
+  {word:"Fire Report", size: "10"},
+  {word:"Forgery And Counterfeiting", size: "10"},
+  {word:"Assault", size: "15"},
+  {word:"Warrant", size: "15"},
+  {word:"Drug Violation", size: "10"},
+  {word:"Human Trafficking, Commercial Sex Acts", size: "10"},
+  {word:"Prostitution", size: "10"},
+  {word:"Other Offenses", size: "10"},
+  {word:"Missing Person", size: "10"},
+  {word:"Offences Against The Family And Children", size: "10"},
+  {word:"Civil Sidewalks", size: "10"},
+  {word:"Burglary", size: "15"},
+  {word:"Motor Vehicle Theft?", size: "10"},
+  {word:"Weapons Offense", size: "10"},
+  {word:"Family Offense", size: "10"},
+  {word:"Other", size: "10"},
+  {word:"Homicide", size: "10"},
+  {word:"Disorderly Conduct", size: "10"}]
+
+  // set the dimensions and margins of the graph
+  var margin = {top: 0, right: 0, bottom: 0, left: 0},
+      width = 400 - margin.left - margin.right,
+      height = 300 - margin.top - margin.bottom;
+
+  // append the svg object to the body of the page
+  var svg = d3.select("#word_cloud").append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+      .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")");
+
+  // Constructs a new cloud layout instance. It run an algorithm to find the position of words that suits your requirements
+  // Wordcloud features that are different from one word to the other must be here
+  var layout = d3.layout.cloud()
+    .size([width, height])
+    .words(myWords.map(function(d) { return {text: d.word, size:d.size}; }))
+    .padding(1)        //space between words
+    .rotate(function() { return ~~(Math.random() * 1) * 90; })
+    .fontSize(function(d) { return d.size; })      // font size of words
+    .on("end", draw);
+  layout.start();
+
+  // This function takes the output of 'layout' above and draw the words
+  // Wordcloud features that are THE SAME from one word to the other can be here
+  function draw(words) {
+    svg
+      .append("g")
+        .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1]/2  + ")")
+        .selectAll("text")
+          .data(words)
+        .enter().append("text")
+          .style("font-size", function(d) { return d.size; })
+          .style("fill", "black")
+          .attr("text-anchor", "middle")
+          .style("font-family", "Impact")
+          .attr("transform", function(d) {
+            return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+          })
+          .text(function(d) { return d.text; });
+
+  }
+
+
+
+
+
+
+</script>
+
+</body>
+
+
+
+</html>

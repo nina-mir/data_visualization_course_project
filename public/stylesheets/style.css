@@ -1,0 +1,207 @@
+#content.container {
+    margin-top: 3.5em;
+    width: 100%; 
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.container {
+    width: 100%;
+}
+
+nav.navbar.navbar-fixed-top {
+    background-color: #86a397; 
+    color:black;
+    font-size: larger;
+}
+
+a.navbar-brand {
+    color:black;
+    font-weight: bold;
+}
+
+a {
+    color:white;
+}
+
+.viz_chart {
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+}
+
+* {
+    box-sizing: border-box;
+  }
+  
+  /* Container for flexboxes */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Create columns */
+/* First row */
+.column11 {
+  height: 400px;
+  flex: 25%;
+}
+
+.column21 {
+  height: 400px;
+  flex: 15%;
+}
+.column31 {
+  height: 400px;
+  flex: 25%;
+}
+
+/* Second row columns */
+.column12 {
+  height: 400px;
+  flex: 8%;
+}
+
+.column22 {
+  height: 400px;
+  flex: 75%;
+}
+
+/* On screens that are 992px wide or less, go from four columns to two columns */
+@media screen and (max-width: 992px) {
+  .column {
+    flex: 50%;
+  }
+}
+  
+/* On screens that are 600px wide or less, make the columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .row {
+    flex-direction: column;
+  }
+}
+
+/*   Google Charts Table Styling */
+.big_bold_class {
+  font-style:normal; 
+  font-weight: bold;
+  font-size:16px;
+}
+.table_headers {
+  background-color: orange;
+  font-size:16px;
+
+}
+
+/* map */
+
+.bubble {
+  /* fill-opacity: .5; */
+  stroke: yellow;
+  stroke-width: .5px;
+}
+
+
+path {
+  /*fill: #ccc;*/
+  stroke: #fff;
+  /* stroke-width: .5px; */
+}
+  
+circle {
+  fill: #fff;
+  /* fill-opacity: 0.4; */
+  /* stroke: #111; */
+}
+
+path.active {
+  fill: gray;
+}
+circle.active {
+  fill: blue;
+}
+
+div.tooltip {	
+  position: absolute;			
+  text-align: center;			
+  width: 250px;					
+  padding: 50px 0 50px 0;
+  font: 18px sans-serif;		
+  font-weight: bold;								
+  background:white;
+  color: black;	
+  border: 1px;		
+  pointer-events: none;			
+}
+
+/* hr   Gradient color1 - color2 - color1 */
+
+hr.style-one {
+    border: 0;
+    height: 10px;
+    background: #333;
+    background-image: linear-gradient(to right, #ccc, #333, #ccc);
+}
+
+input[type='radio'] {
+  -webkit-appearance:none;
+  width:20px;
+  height:20px;
+  border:1px solid darkgray;
+  border-radius:50%;
+  outline:none;
+  box-shadow:0 0 5px 0px gray inset;
+}
+
+input[type='radio']:hover {
+  box-shadow:0 0 5px 0px orange inset;
+}
+
+input[type='radio']:before {
+  content:'';
+  display:block;
+  width:60%;
+  height:60%;
+  margin: 20% auto;    
+  border-radius:50%;    
+}
+input[type='radio']:checked:before {
+  background:green;
+}
+
+/* checkbox */
+
+input[type='checkbox'] {
+  -webkit-appearance:none;
+  width:15px;
+  height:15px;
+  border:1px solid darkgray;
+  /* border-radius:50%; */
+  outline:none;
+  box-shadow:0 0 5px 0px gray inset;
+}
+
+input[type='checkbox']:hover {
+  box-shadow:0 0 5px 0px rgb(20, 20, 20) inset;
+}
+
+input[type='checkbox']:before {
+  content:'';
+  display:block;
+  width:60%;
+  height:60%;
+  margin: 20% auto;    
+  /* border-radius:50%;     */
+}
+input[type='checkbox']:checked:before {
+  background:green;
+}
+
+/* a element */
+a[href^="https"]::before {
+  content: "🔗 ";
+}
+
+p {
+  line-height: 1.3;
+  font-size: 16px;
+}

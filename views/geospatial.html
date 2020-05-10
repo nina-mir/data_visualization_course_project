@@ -1,0 +1,233 @@
+<html>
+<head>
+  <title>A D3 map</title>
+  <script src='https://d3js.org/d3.v4.min.js'></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script type="text/javascript" src="/javascripts/geospatial_hoods.js"></script>
+  <script type="text/javascript" src="/data_files/all_hoods_monthly_incident_data_json.js"></script>
+
+</head>
+<body style="font-family:'PT Sans', sans-serif;">
+
+  
+  <form >
+	<p style="font-size: 16px;">Please Select a 2019 month or the Whole Year :</p>
+	<div>
+		<label for="All" > 2019</label>
+		<input type="radio" id="All" name="month" value="All" checked>
+		<label for="January" >January</label>
+		<input type="radio" id="January" name="month" value="January">
+		<label for="February">February</label>
+ 		<input type="radio" id="February" name="month" value="February">
+		<label for="March">March</label>	
+		<input type="radio" id="March" name="month" value="March">
+		<label for="April">April</label>	
+		<input type="radio" id="April" name="month" value="April">
+		<label for="May">May</label>	
+		<input type="radio" id="May" name="month" value="May">
+		<label for="June">June</label>	
+		<input type="radio" id="June" name="month" value="June">
+		<label for="July">July</label>	
+		<input type="radio" id="July" name="month" value="July">
+		<label for="August">August</label>	
+		<input type="radio" id="August" name="month" value="August">
+		<label for="September">September</label>	
+		<input type="radio" id="September" name="month" value="September">
+		<label for="October">October</label>	
+		<input type="radio" id="October" name="month" value="October">
+		<label for="November">November</label>	
+		<input type="radio" id="November" name="month" value="November">
+		<label for="December">December</label>	
+		<input type="radio" id="December" name="month" value="December">		
+	</div>
+	<hr>
+	<hr>
+	<p style="font-size: 16px;">Please Select All or Any Number of the Incident Categorie:</p>
+	<br>
+	<label style="font-size: 15px; padding:8px;">
+		<input class="selectall" type="checkbox" name="Incident Category" value='All' checked> All Categories or:
+	</label>
+	<div id="check_boxes"></div>
+	<div>
+	  <!-- <button type="submit">Submit</button> -->
+	  <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+	</div>
+  </form> 
+  
+  <p style="font-size:16px;color:black; background-color:cyan" id="info"></p>
+
+
+  
+
+  <div class="container">
+    <div class="row">
+      <div id="map_map" class="col-sm-9 col-md-8 col-lg-8"></div>
+      <div id="map_info" class="col-sm-3 col-md-4 col-lg-4" style="background-color:#e5be9e" >
+		<p id="answer" style="color: rgb(152, 152, 175);"></p>
+      </div>
+    </div>
+  </div>
+  
+  <script type="text/javascript" src="/javascripts/map.js"></script>
+  <script type="text/javascript" src="/javascripts/map_functions.js"></script>
+
+
+<script>
+
+
+
+
+var bubbles_radius_dict = null, month = null, category = null;
+
+
+
+// Checkboxes & Radio button HANDLING
+var submitted_form_data = [];
+
+var form = document.querySelector("form");
+
+
+form.addEventListener("submit", function(event) {
+  // Clear the submitted list array 
+  submitted_form_data = [];
+  var data = new FormData(form);
+  for (const entry of data) {
+    submitted_form_data.push(entry[1]);
+  };
+  month = submitted_form_data[0];
+  category = submitted_form_data.slice(1,);
+  
+  $('#info').html('<strong> You Selcted :  <br>Month: </strong>'+ month + '<br>' + 
+  '<strong>Incident Categories:  </strong>' + category);
+
+  if (month == "All") { month = null;}
+  
+  if (category[0] == "All") {category = null;}
+  
+		  
+  try {
+	myFunction(month, category);
+  }
+  catch(err) {
+	console.alert(err.message);
+  }
+
+  event.preventDefault();
+}, false);
+
+
+
+function myFunction(monat, cat) {
+	
+	d3.selectAll("circle").remove();
+
+	//console.log(monat, cat);
+	bubbles_radius_dict = bubble_size_maker(monat,cat);
+	var initialScaleData = Object.keys(bubbles_radius_dict).map(function(key){ return bubbles_radius_dict[key] });
+	var minDataPoint = d3.min(initialScaleData);
+	var min_d3_scale = 2;
+	//if (minDataPoint === 0 ) { min_d3_scale = minDataPoint;} 
+	var maxDataPoint = d3.max(initialScaleData);
+	var linearScale = d3.scaleLinear()
+		.domain([minDataPoint,maxDataPoint])
+		.range([min_d3_scale,28]); 
+
+
+	svg.append("g")
+	    .attr("class", "bubble")
+	  .selectAll("circle")
+	    .data(neighborhoods_json.features)
+	  .enter().append("circle")
+	    .attr("transform", function(d, i) { return "translate(" + geoPath.centroid(d) + ")"; })
+	    .attr("r", function(d, i){
+		var name = d.properties.nhood;// result = bubbles_radius_dict;
+		
+		return linearScale( bubbles_radius_dict[name]);
+      }).
+		on("mouseover",function(d) {
+		    console.log(d.properties.nhood, d3.select(d));
+		    d3.select(this)
+		      .classed("active",true);
+		    div.transition()		
+				.duration(200)		
+				.style("opacity", .9);		
+				div	.html(d.properties.nhood + "<br/>" + 
+					bubbles_radius_dict[d.properties.nhood] + " incident calls" )	
+				.style("left", 0 + "px")		
+				.style("top", 150 + "px");
+		  })
+		  .on("mouseout",function(d){
+		    d3.select(this)
+		      .classed("active",false);
+		    div.transition().duration(500)		
+				.style("opacity", 0);	
+		  });
+  
+	
+}
+
+// Checkbox making:
+
+categories =[ 'Non-Criminal','Larceny Theft','Suicide', 'Rape', 'Homicide', 'Prostitution', 
+'Weapons Offense','Missing Person', 'Assault','Drug Offense', 'Recovered Vehicle', 'Motor Vehicle Theft',
+'Traffic Violation Arrest','Vehicle Misplaced','Vehicle Impounded','Traffic Collision','Offences Against The Family And Children',  'Other Miscellaneous', 
+'Sex Offense', 'Other Offenses', 'Malicious Mischief', 'Burglary', 'Weapons Carrying Etc',
+'Warrant',   'Fraud', 'Lost Property', 'Vandalism', 'Robbery',
+'Forgery And Counterfeiting', 'Stolen Property', 'Gambling', 'Embezzlement', 'Courtesy Report', 
+'Disorderly Conduct', 'Civil Sidewalks','Drug Violation', 'Arson', 'Family Offense',
+'Weapons Offence',  'Fire Report', 'Liquor Laws', 'Human Trafficking, Commercial Sex Acts', 
+'Human Trafficking (A), Commercial Sex Acts', 'Suspicious','Suspicious Occ', 
+'Miscellaneous Investigation','Other', 'Case Closure']
+
+
+// First: clear the former content of a given <div id="some_div"></div>
+document.getElementById('check_boxes').innerHTML = '';
+
+categories.forEach(function(x){
+	// create the necessary elements
+	var pair = x;
+
+	var label= document.createElement("label");
+	var description = document.createTextNode(pair);
+	var checkbox = document.createElement("input");
+
+	checkbox.className = "justone";
+	checkbox.type = "checkbox";    // make the element a checkbox
+	checkbox.name = "Incident Categoty";      // give it a name we can check on the server side
+	checkbox.value = pair;         // make its value "pair"
+	if (pair === 'All') { checkbox.checked = true};
+
+	label.appendChild(checkbox);   // add the box to the element
+	label.appendChild(description);// add the description to the element
+	label.style.fontSize='15px';
+	label.style.padding ='8px';
+
+	// add the label element to your div
+	document.getElementById('check_boxes').appendChild(label);
+
+
+});
+
+// Managing Checkbozes 
+
+$('.selectall').click(function() {
+    if ($(this).is(':checked')) {
+        $('input:checkbox').prop('checked', true);
+    } else {
+        $('input:checkbox').prop('checked', false);
+    }
+});
+
+$("input[type='checkbox'].justone").change(function(){
+    var a = $("input[type='checkbox'].justone");
+    if(a.length == a.filter(":checked").length){
+        $('.selectall').prop('checked', true);
+    }
+    else {
+        $('.selectall').prop('checked', false);
+    }
+});
+
+</script>
+</body>
+</html>
