@@ -1,4 +1,4 @@
-### google_chart_guide
+### Data_Viz_Project
 #### live demo: www.ninamir.info
 #### How to start
 1. `git clone` the repo
